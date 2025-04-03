@@ -104,9 +104,9 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   - $L_{i,t}$: Loss contribution from each token.
 
 - **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{ref}$ (e.g., initial policy):
-  $L_{total}(\theta) = L_{GRPO}(\theta) - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$
+  $L_{total}(\theta) = L_{GRPO}(\theta) - \beta D_{KL}[\pi_\theta || \pi_{ref}]$
   **Terms**:
-  - $D_{KL}[\pi_\theta \,||\, \pi_{ref}]$: KL divergence, approximated per token as:
+  - $D_{KL}[\pi_\theta || \pi_{ref}]$: KL divergence, approximated per token as:
     $D_{KL} \approx \sum_{t} \pi_{ref}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{ref}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}$
   - $\beta$: Hyperparameter (e.g., 0.01) controlling penalty strength.
   
@@ -131,7 +131,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 2. **Probability Ratio**: $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
 3. **Clipped Term**: $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
 4. **Token Loss**: $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
-5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$.
+5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
 
 **Limitations & Challenges of GRPO**  
 The following passage is taken directly from the HuggingFace Reasoning Course[^5]  : 
@@ -371,7 +371,12 @@ advantages = advantages.unsqueeze(1)
 **Explanation:**  
 - **Reward Assignment:** Rewards are assigned per query: $q_1$ (answer: 5) gets [1, 0, 0, 1]; $q_2$ (answer: 9) gets [0, 0, 1, 1]. In practice, we’d decode the generated tokens and compare them to the correct answers (Step 3).  
 - **Grouping:** `rewards_grouped` becomes $(2, 4)$:  
-  $\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}$  
+  $\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}$
+  
+  [
+    1  0  0  1
+    0  0  1  1
+  ]
 - **Statistics:** Mean: [0.5, 0.5], Std: [0.5774, 0.5774]  
 - **Broadcasting:** Mean and std are repeated: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]  
 - **Advantages:** $A_i = \frac{r_i - \bar{r}}{\sigma_r + 10^{-8}}$, e.g., $A_1 = \frac{1 - 0.5}{0.5774} \approx 0.8659$, yielding [0.8659, -0.8660, -0.8660, 0.8659, -0.8660, -0.8660, 0.8659, 0.8659]  
@@ -569,7 +574,7 @@ The group-based normalization is a hallmark of GRPO, enabling relative compariso
 
 ### Step 4: Compute the Surrogate Loss
 
-**What It Does in Theory**: This step computes the probability ratio $ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = \min(ratio}_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$.
+**What It Does in Theory**: This step computes the probability ratio $ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = \min(ratio}_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
 
 **Implementation in TRL**: This is implemented in the `compute_loss` method:
 
@@ -634,7 +639,7 @@ def _get_per_token_logps(self, model, input_ids, attention_mask, logits_to_keep)
 **Why the Negative Sign?**: In RL, we maximize the surrogate objective, but the `Trainer` minimizes the loss. Thus, $L_{i,t}$ is negated to align with this convention.
 
 - **Key Detail**: The KL penalty uses an approximation rather than the exact $D_{\text{KL}}$, which simplifies computation and is effective for small policy changes.  
-  The KL divergence penalty $\beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$ is approximated per token as $\exp(x) - x - 1$, where $x = \log \frac{\pi_{ref}(o_{i,t})}{\pi_\theta(o_{i,t})}$. For small policy updates, this expands to $\frac{1}{2} x^2 + \mathcal{O}(x^3)$, mirroring the second-order behavior of the KL divergence for the chosen token $o_{i,t}$. This approximation avoids summing over the full vocabulary, balancing computational efficiency with effective regularization in GRPO.
+  The KL divergence penalty $\beta D_{KL}[\pi_\theta ||\pi_{ref}]$ is approximated per token as $\exp(x) - x - 1$, where $x = \log \frac{\pi_{ref}(o_{i,t})}{\pi_\theta(o_{i,t})}$. For small policy updates, this expands to $\frac{1}{2} x^2 + \mathcal{O}(x^3)$, mirroring the second-order behavior of the KL divergence for the chosen token $o_{i,t}$. This approximation avoids summing over the full vocabulary, balancing computational efficiency with effective regularization in GRPO.
 
 ### Step 5: Backpropagate and Update the Policy
 
