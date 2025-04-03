@@ -42,9 +42,9 @@ where $|o_i|$ is the length of the sequence.
 **Step 3: Calculate Rewards and Advantages**
 
 - **Reward Assignment**: Pass each output $o_i$ to a reward model, which assigns a scalar reward $r_i$ based on quality (e.g., accuracy, coherence). You get 
-$$
+$
 \{r_1, r_2, \dots, r_G\}.
-$$
+$
 
 To make this more concrete, DeepSeek uses a rule-based strategy tailored to each task, such as math or coding. The reward $r_i$ for an output $o_i$ is computed using a weighted combination:
 $$
