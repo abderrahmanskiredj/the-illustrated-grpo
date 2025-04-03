@@ -128,9 +128,9 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 **Summary of Key Formulas**
 
 1. **Advantage**: $A_i = \frac{r_i - \bar{r}}{\sigma_r + \epsilon}$, uniform for all tokens in $o_i$.
-2. **Probability Ratio**: $ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
-3. **Clipped Term**: $g(\epsilon, A_i) = clip}(ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
-4. **Token Loss**: $L_{i,t} = \min \left( ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
+2. **Probability Ratio**: $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
+3. **Clipped Term**: $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
+4. **Token Loss**: $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
 5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$.
 
 **Limitations & Challenges of GRPO**  
@@ -326,8 +326,8 @@ outputs = model.generate(
 
 **Comments:**  
 - **Model Loading:** We load `Qwen/Qwen2-Math-1.5B` and its tokenizer, representing the current policy $\pi_{\theta_{old}}$ (Step 1). The model is set to evaluation mode and moved to the GPU if available.  
-- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, prompt_len})$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
-- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, prompt_len})$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
+- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, prompt_len)$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
+- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, prompt_len)$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
   - $q_1$: [5, 6, 7, 5]  
   - $q_2$: [10, 2, 9, 9]  
 
@@ -449,7 +449,7 @@ def _get_train_sampler(self) -> Sampler:
 
 - **Dataset Source**: The `train_dataset` contains the prompts (stored under the key `"prompt"`).  
 - **Custom Sampling**: The `RepeatRandomSampler` repeats each prompt `num_generations` times (denoted $G$ in the theory) within each batch. This ensures that for every unique prompt $q_i$, there are $G$ instances in the batch, allowing the generation of multiple outputs later.  
-- **Batch Size**: The `effective_batch_size` accounts for the number of devices and gradient accumulation steps, ensuring scalability across distributed setups. The number of unique prompts per batch is $effective_batch_size} / G$.  
+- **Batch Size**: The `effective_batch_size` accounts for the number of devices and gradient accumulation steps, ensuring scalability across distributed setups. The number of unique prompts per batch is $effective\\_batch\\_size / G$.  
 - **Repetition Across Updates**: The `repeat_count=self.num_iterations` parameter allows the same batch to be reused across multiple optimization steps, a feature unique to GRPO for efficiency.  
 
 This setup guarantees that the batch is structured to support the generation of $G$ outputs per query, aligning with Step 2. The sampler’s design also ensures consistency across processes in distributed training, which is crucial for reward normalization later.
@@ -560,7 +560,7 @@ if self.args.scale_rewards:
     advantages = advantages / (std_grouped_rewards.repeat_interleave(self.num_generations, dim=0) + 1e-4)
 ```
 
-- **Reward Computation**: For each completion, rewards are calculated using multiple `reward_funcs` (e.g., models or custom functions). The total reward $r_i$ is a weighted sum of individual rewards, matching the theoretical $r_i = \alpha \cdot accuracy\_score} + \beta \cdot format\_score}$.
+- **Reward Computation**: For each completion, rewards are calculated using multiple `reward_funcs` (e.g., models or custom functions). The total reward $r_i$ is a weighted sum of individual rewards, matching the theoretical $r_i = \alpha \cdot accuracy\\_score + \beta \cdot format\\_score$.
 
 - **Grouping**: Rewards are reshaped into groups of size $G$ (`self.num_generations`) to compute per-group statistics.  
 - **Advantages**: The advantage $A_i$ is computed as $r_i - \bar{r}$, and if `scale_rewards` is True, it’s normalized to $\frac{r_i - \bar{r}}{\sigma_r + 10^{-4}}$, directly implementing the formula from Step 3.  
@@ -628,12 +628,13 @@ def _get_per_token_logps(self, model, input_ids, attention_mask, logits_to_keep)
   - `per_token_loss1 = coef_1 * advantages` is the unclipped term.  
   - `per_token_loss2 = coef_2 * advantages` is the clipped term.  
   - `per_token_loss = -torch.min(per_token_loss1, per_token_loss2)` computes $L_{i,t}$, negated because the training loop minimizes the loss, while GRPO aims to maximize the surrogate objective.  
-- **KL Penalty**: If `beta != 0`, the KL term is approximated as $\exp(ref_logps} - logps}) - (ref_logps} - logps}) - 1$, added to the loss scaled by `beta`.  
+- **KL Penalty**: If `beta != 0`, the KL term is approximated as $\exp(ref\\_logps - logps) - (ref\\_logps - logps) - 1$, added to the loss scaled by `beta`.  
 - **Total Loss**: The final `loss` averages $L_{i,t}$ over all tokens, masked by `completion_mask`, matching $\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$.  
 
 **Why the Negative Sign?**: In RL, we maximize the surrogate objective, but the `Trainer` minimizes the loss. Thus, $L_{i,t}$ is negated to align with this convention.
 
-**Key Detail**: The KL penalty uses an approximation rather than the exact $D_{KL}$, which simplifies computation and is effective for small policy changes.
+- **Key Detail**: The KL penalty uses an approximation rather than the exact $D_{\text{KL}}$, which simplifies computation and is effective for small policy changes.  
+  The KL divergence penalty $\beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$ is approximated per token as $\exp(x) - x - 1$, where $x = \log \frac{\pi_{ref}(o_{i,t})}{\pi_\theta(o_{i,t})}$. For small policy updates, this expands to $\frac{1}{2} x^2 + \mathcal{O}(x^3)$, mirroring the second-order behavior of the KL divergence for the chosen token $o_{i,t}$. This approximation avoids summing over the full vocabulary, balancing computational efficiency with effective regularization in GRPO.
 
 ### Step 5: Backpropagate and Update the Policy
 
