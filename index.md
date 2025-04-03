@@ -124,9 +124,8 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   $\nabla_\theta L_{total}(\theta)$
 - **Update**: Use an optimizer (e.g., Adam) to adjust $\theta$:
   $\theta \leftarrow \theta - \eta \nabla_\theta L_{total}(\theta)$
-  
-  **Terms**:
-  - $\eta$: Learning rate (e.g., $10^{-5}$).
+
+  Where $\eta$ is the Learning rate (e.g., $10^{-5}$).
   
   The idea is to minimize the loss, effectively maximizing the expected reward by adjusting token probabilities.
 
