@@ -373,11 +373,9 @@ advantages = advantages.unsqueeze(1)
 - **Grouping:** `rewards_grouped` becomes $(2, 4)$:  
   $\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}$
   
-  [
-    1  0  0  1
-  
-    0  0  1  1
-  ]
+[ 1  0  0  1 ]
+[ 0  0  1  1 ]
+
 - **Statistics:** Mean: [0.5, 0.5], Std: [0.5774, 0.5774]  
 - **Broadcasting:** Mean and std are repeated: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]  
 - **Advantages:** $A_i = \frac{r_i - \bar{r}}{\sigma_r + 10^{-8}}$, e.g., $A_1 = \frac{1 - 0.5}{0.5774} \approx 0.8659$, yielding [0.8659, -0.8660, -0.8660, 0.8659, -0.8660, -0.8660, 0.8659, 0.8659]  
