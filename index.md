@@ -24,6 +24,7 @@ Group Relative Policy Optimization (GRPO) fine-tunes a language model by iterati
 5. Update the policy parameters $\theta$ via backpropagation to maximize expected rewards.
 
 These steps are illustrated in Figure 1. Let us now delve into the details of each step.
+
 ![Overview of the GRPO algorithm workflow.](https://github.com/abderrahmanskiredj/the-illustrated-grpo/blob/master/my_diagram.png "Figure 1: Overview of the GRPO algorithm workflow.")
 
 **Step 1: Prepare a Batch of Training Queries**  
