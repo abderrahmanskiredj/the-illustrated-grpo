@@ -79,6 +79,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 - **Clipped Objective**: Define the clipped term:
   $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
+  
   **Terms**:
   - $clip(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $max(a, min(b, x))$ ).
   - $\epsilon$: Hyperparameter (e.g., 0.2) controlling the clipping range.
@@ -88,6 +89,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 - **Loss per Token**: For each token $o_{i,t}$:
   $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
+  
   **Terms**:
   - $ratio_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
   - $g(\epsilon, A_i)$: Clipped objective (caps the update size).
@@ -98,6 +100,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 - **Total Surrogate Loss**: Average over all tokens and outputs:
   $L_{GRPO}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
+  
   **Terms**:
   - $\frac{1}{G}$: Normalizes across the $G$ outputs.
   - $\frac{1}{|o_i|}$: Normalizes across the length of each output $o_i$.
@@ -105,6 +108,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 - **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{ref}$ (e.g., initial policy):
   $L_{total}(\theta) = L_{GRPO}(\theta) - \beta D_{KL}[\pi_\theta || \pi_{ref}]$
+  
   **Terms**:
   - $D_{KL}[\pi_\theta || \pi_{ref}]$: KL divergence, approximated per token as:
     $D_{KL} \approx \sum_{t} \pi_{ref}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{ref}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}$
@@ -120,6 +124,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   $\nabla_\theta L_{total}(\theta)$
 - **Update**: Use an optimizer (e.g., Adam) to adjust $\theta$:
   $\theta \leftarrow \theta - \eta \nabla_\theta L_{total}(\theta)$
+  
   **Terms**:
   - $\eta$: Learning rate (e.g., $10^{-5}$).
   
