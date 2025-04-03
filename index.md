@@ -30,13 +30,13 @@ These steps are illustrated in Figure 1. Let us now delve into the details of ea
 Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the batch size. These are questions or prompts the model will respond to.
 
 **Step 2: Sample $G$ Outputs for a Single Query**  
-For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{\text{old}}$ (denoted $\pi_{\theta_{\text{old}}}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output \( o_i \) is a sequence of tokens:  
-\[ 
-o_i = [o_{i,1}, o_{i,2}, \dots, o_{i,|o_i|}], 
-\]  
-where \( |o_i| \) is the length of the sequence.  
+For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{\text{old}}$ (denoted $\pi_{\theta_{\text{old}}}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
 
-**Why G Outputs?**: Sampling multiple outputs allows GRPO to compare them relative to each other, forming a group-based baseline for rewards.
+$o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,|o_i|}]$,
+
+where $|o_i|$ is the length of the sequence.
+
+**Why G Outputs?** Sampling multiple outputs allows GRPO to compare them relative to each other, forming a group-based baseline for rewards.
 
 
 **Step 3: Calculate Rewards and Advantages**
