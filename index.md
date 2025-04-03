@@ -69,7 +69,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 **Step 4: Compute the Surrogate Loss**
 
 - **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_{\theta}$ and the old policy $\pi_{\theta_{old}}$:
-  $ratio_{i,t} = \frac{\pi_{\theta}(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}(o_{i,t} \mid q, o_{i,<t})}$
+  $ratio_{i,t} = \frac{\pi_{\theta}(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$
   
   **Terms**:
   - $\pi_\theta(o_{i,t} \mid q, o_{i,<t})$: Probability of generating token $o_{i,t}$ given query $q$ and previous tokens $o_{i,<t} = [o_{i,1}, \dots, o_{i,t-1}]$ under the current policy.
@@ -78,18 +78,18 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   The idea is to measure how much the policy has changed for that token.
 
 - **Clipped Objective**: Define the clipped term:
-  $g(\epsilon, A_i) = clip}(ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
+  $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
   **Terms**:
-  - $clip}(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $\max(a, \min(b, x))$).
+  - $clip(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $\max(a, \min(b, x))$).
   - $\epsilon$: Hyperparameter (e.g., 0.2) controlling the clipping range.
   - $A_i$: Advantage for output $o_i$.
   
   The idea is to limit large policy updates for stability.
 
 - **Loss per Token**: For each token $o_{i,t}$:
-  $L_{i,t} = \min \left( ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
+  $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
   **Terms**:
-  - $ratio}_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
+  - $ratio_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
   - $g(\epsilon, A_i)$: Clipped objective (caps the update size).
   
   The idea is to take the minimum to conservatively update the policy: The clipping restricts the policy update ratio to $[1 - \epsilon, 1 + \epsilon]$ to avoid large shifts from the old policy. This in particular limits overconfident updates.
