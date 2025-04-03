@@ -628,7 +628,7 @@ def _get_per_token_logps(self, model, input_ids, attention_mask, logits_to_keep)
 
 - **Log Probabilities**: The `_get_per_token_logps` method computes per-token log probabilities for the current model (`per_token_logps`) and, if needed, the reference model (`ref_per_token_logps`).  
 - **Probability Ratio**:  
-  - $ratio}_{i,t}$ is calculated as $\exp(per_token_logps} - old_per_token_logps})$, stored in `coef_1`. This is the exponential of the log probability difference, equivalent to $\frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{old}}(o_{i,t})}$.  
+  - $ratio_{i,t}$ is calculated as $\exp(per_token_logps - old_per_token_logps)$, stored in `coef_1`. This is the exponential of the log probability difference, equivalent to $\frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{old}}(o_{i,t})}$.  
 - **Clipped Term**:  
   - $g(\epsilon, A_i)$ is implemented as `coef_2 = torch.clamp(coef_1, 1 - self.epsilon_low, 1 + self.epsilon_high)` multiplied by `advantages`, ensuring the ratio stays within $[1 - \epsilon, 1 + \epsilon]$.  
 - **Per-Token Loss**:  
