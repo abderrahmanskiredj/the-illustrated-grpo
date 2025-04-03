@@ -17,7 +17,7 @@ The paper is organized into **four main sections** to provide a comprehensive un
 **Overview of the GRPO Algorithm**  
 Group Relative Policy Optimization (GRPO) fine-tunes a language model by iteratively improving its policy through group-based reward comparisons. The algorithm proceeds as follows:
 
-1. Sample $G$ outputs per query from a batch using the current policy $\pi_{\theta_{old}$.
+1. Sample $G$ outputs per query from a batch using the current policy $\pi_{\theta_{old}}$.
 2. Evaluate each output with a reward model to assign scalar rewards $r_i$.
 3. Compute advantages $A_i$ by normalizing rewards relative to the group’s mean and standard deviation.
 4. Calculate a surrogate loss using clipped probability ratios between the current policy $\pi_\theta$ and old policy, with a KL penalty for stability.
@@ -30,7 +30,7 @@ These steps are illustrated in Figure 1. Let us now delve into the details of ea
 Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the batch size. These are questions or prompts the model will respond to.
 
 **Step 2: Sample $G$ Outputs for a Single Query**  
-For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{old}$ (denoted $\pi_{\theta_{old}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
+For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{old}$ (denoted $\pi_{\theta_{old}}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
 
 $o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,|o_i|}]$,
 
@@ -68,7 +68,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 **Step 4: Compute the Surrogate Loss**
 
-- **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_{\theta}$ and the old policy $\pi_{\theta_{old}}}$:
+- **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_{\theta}$ and the old policy $\pi_{\theta_{old}}$:
   $ratio_{i,t} = \frac{\pi_{\theta}(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}(o_{i,t} \mid q, o_{i,<t})}$
   
   **Terms**:
