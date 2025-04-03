@@ -45,7 +45,7 @@ where $|o_i|$ is the length of the sequence.
 $\{r_1, r_2, \dots, r_G\}.$
 
 To make this more concrete, DeepSeek uses a rule-based strategy tailored to each task, such as math or coding. The reward $r_i$ for an output $o_i$ is computed using a weighted combination:
-$r_i = \alpha \cdot accuracy \\_ score + \beta \cdot format  score,$
+$r_i = \alpha \cdot accuracy\\_score + \beta \cdot format\\_score,$
 where $\alpha$ and $\beta$ are task-specific weights balancing correctness and structure.
 For the accuracy score, math tasks use regular expressions to extract the final answer and compare it to the ground truth (1 if correct, 0 otherwise). Coding tasks run the code in a sandbox and assign a score based on how many test cases pass. The format score, on the other hand, checks whether the output follows the expected structure—such as including reasoning within specific tags like `<think>`—and is typically binary (1 if well-structured, 0 if not).
 
