@@ -371,14 +371,12 @@ advantages = advantages.unsqueeze(1)
 **Explanation:**  
 - **Reward Assignment:** Rewards are assigned per query: $q_1$ (answer: 5) gets [1, 0, 0, 1]; $q_2$ (answer: 9) gets [0, 0, 1, 1]. In practice, we’d decode the generated tokens and compare them to the correct answers (Step 3).  
 - **Grouping:** `rewards_grouped` becomes $(2, 4)$:  
-  $\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}$
 
-  
 $$
-\begin{pmatrix}
-a & b & c & d \\
-e & f & g & h
-\end{pmatrix}
+\begin{bmatrix}
+1 & 0 & 0 & 1 \\
+0 & 0 & 1 & 1
+\end{bmatrix}
 $$
 
 - **Statistics:** Mean: [0.5, 0.5], Std: [0.5774, 0.5774]  
