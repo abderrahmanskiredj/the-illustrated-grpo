@@ -17,7 +17,7 @@ The paper is organized into **four main sections** to provide a comprehensive un
 **Overview of the GRPO Algorithm**  
 Group Relative Policy Optimization (GRPO) fine-tunes a language model by iteratively improving its policy through group-based reward comparisons. The algorithm proceeds as follows:
 
-1. Sample $G$ outputs per query from a batch using the current policy $\pi_{\theta_{\text{old}}}$.
+1. Sample $G$ outputs per query from a batch using the current policy $\pi_{\theta_{old}$.
 2. Evaluate each output with a reward model to assign scalar rewards $r_i$.
 3. Compute advantages $A_i$ by normalizing rewards relative to the group’s mean and standard deviation.
 4. Calculate a surrogate loss using clipped probability ratios between the current policy $\pi_\theta$ and old policy, with a KL penalty for stability.
@@ -30,7 +30,7 @@ These steps are illustrated in Figure 1. Let us now delve into the details of ea
 Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the batch size. These are questions or prompts the model will respond to.
 
 **Step 2: Sample $G$ Outputs for a Single Query**  
-For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{\text{old}}$ (denoted $\pi_{\theta_{\text{old}}}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
+For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{old}$ (denoted $\pi_{\theta_{old}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
 
 $o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,|o_i|}]$,
 
@@ -68,33 +68,33 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 
 **Step 4: Compute the Surrogate Loss**
 
-- **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_{\theta}$ and the old policy $\pi_{\theta_{\text{old}}}$:
-  $ratio_{i,t} = \frac{\pi_{\theta}(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$
+- **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_{\theta}$ and the old policy $\pi_{\theta_{old}}}$:
+  $ratio_{i,t} = \frac{\pi_{\theta}(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}(o_{i,t} \mid q, o_{i,<t})}$
   
   **Terms**:
   - $\pi_\theta(o_{i,t} \mid q, o_{i,<t})$: Probability of generating token $o_{i,t}$ given query $q$ and previous tokens $o_{i,<t} = [o_{i,1}, \dots, o_{i,t-1}]$ under the current policy.
-  - $\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})$: Same, but under the old policy.
+  - $\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})$: Same, but under the old policy.
   
   The idea is to measure how much the policy has changed for that token.
 
 - **Clipped Objective**: Define the clipped term:
-  $g(\epsilon, A_i) = \text{clip}(\text{ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
+  $g(\epsilon, A_i) = clip}(ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
   **Terms**:
-  - $\text{clip}(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $\max(a, \min(b, x))$).
+  - $clip}(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $\max(a, \min(b, x))$).
   - $\epsilon$: Hyperparameter (e.g., 0.2) controlling the clipping range.
   - $A_i$: Advantage for output $o_i$.
   
   The idea is to limit large policy updates for stability.
 
 - **Loss per Token**: For each token $o_{i,t}$:
-  $L_{i,t} = \min \left( \text{ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
+  $L_{i,t} = \min \left( ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
   **Terms**:
-  - $\text{ratio}_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
+  - $ratio}_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
   - $g(\epsilon, A_i)$: Clipped objective (caps the update size).
   
   The idea is to take the minimum to conservatively update the policy: The clipping restricts the policy update ratio to $[1 - \epsilon, 1 + \epsilon]$ to avoid large shifts from the old policy. This in particular limits overconfident updates.
   
-  Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i|q) = 0.9$, $\pi_{\text{old}}(o_i|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
+  Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i|q) = 0.9$, $\pi_{old}(o_i|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
 
 - **Total Surrogate Loss**: Average over all tokens and outputs:
   $L_{GRPO}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
@@ -103,23 +103,23 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   - $\frac{1}{|o_i|}$: Normalizes across the length of each output $o_i$.
   - $L_{i,t}$: Loss contribution from each token.
 
-- **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{\text{ref}}$ (e.g., initial policy):
-  $\mathcal{L}_{\text{total}}(\theta) = \mathcal{L}_{\text{GRPO}}(\theta) - \beta D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$
+- **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{ref}$ (e.g., initial policy):
+  $L_{total}(\theta) = L_{GRPO}(\theta) - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$
   **Terms**:
-  - $D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$: KL divergence, approximated per token as:
-    $D_{\text{KL}} \approx \sum_{t} \pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}$
+  - $D_{KL}[\pi_\theta \,||\, \pi_{ref}]$: KL divergence, approximated per token as:
+    $D_{KL} \approx \sum_{t} \pi_{ref}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{ref}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}$
   - $\beta$: Hyperparameter (e.g., 0.01) controlling penalty strength.
   
-  The idea is to ensure stability by keeping $\pi_\theta$ close to $\pi_{\text{ref}}$. A KL divergence penalty keeps the model’s outputs near the original distribution, preventing extreme shifts while still allowing controlled exploration and refinement.
+  The idea is to ensure stability by keeping $\pi_\theta$ close to $\pi_{ref}$. A KL divergence penalty keeps the model’s outputs near the original distribution, preventing extreme shifts while still allowing controlled exploration and refinement.
   
   The $\beta$ parameter controls the strength of the KL divergence penalty. A higher $\beta$ keeps the policy close to the reference, ensuring stability but slowing exploration. A lower $\beta$ allows faster adaptation and more deviation, but risks instability or reward hacking. The original DeepSeekMath paper used $\beta= 0.04$.
 
 **Step 5: Backpropagate and Update the Policy**
 
-- **Gradient Computation**: Compute the gradient of $\mathcal{L}_{\text{total}}(\theta)$ with respect to $\theta$:
-  $\nabla_\theta \mathcal{L}_{\text{total}}(\theta)$
+- **Gradient Computation**: Compute the gradient of $L_{total}(\theta)$ with respect to $\theta$:
+  $\nabla_\theta L_{total}(\theta)$
 - **Update**: Use an optimizer (e.g., Adam) to adjust $\theta$:
-  $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}_{\text{total}}(\theta)$
+  $\theta \leftarrow \theta - \eta \nabla_\theta L_{total}(\theta)$
   **Terms**:
   - $\eta$: Learning rate (e.g., $10^{-5}$).
   
@@ -128,10 +128,10 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 **Summary of Key Formulas**
 
 1. **Advantage**: $A_i = \frac{r_i - \bar{r}}{\sigma_r + \epsilon}$, uniform for all tokens in $o_i$.
-2. **Probability Ratio**: $\text{ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$.
-3. **Clipped Term**: $g(\epsilon, A_i) = \text{clip}(\text{ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
-4. **Token Loss**: $L_{i,t} = \min \left( \text{ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
-5. **Total Loss**: $\mathcal{L}_{\text{total}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$.
+2. **Probability Ratio**: $ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
+3. **Clipped Term**: $g(\epsilon, A_i) = clip}(ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
+4. **Token Loss**: $L_{i,t} = \min \left( ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
+5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$.
 
 **Limitations & Challenges of GRPO**  
 The following passage is taken directly from the HuggingFace Reasoning Course[^5]  : 
@@ -325,9 +325,9 @@ outputs = model.generate(
 ```
 
 **Comments:**  
-- **Model Loading:** We load `Qwen/Qwen2-Math-1.5B` and its tokenizer, representing the current policy $\pi_{\theta_{\text{old}}}$ (Step 1). The model is set to evaluation mode and moved to the GPU if available.  
-- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, \text{prompt_len})$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
-- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, \text{prompt_len})$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
+- **Model Loading:** We load `Qwen/Qwen2-Math-1.5B` and its tokenizer, representing the current policy $\pi_{\theta_{old}}$ (Step 1). The model is set to evaluation mode and moved to the GPU if available.  
+- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, prompt_len})$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
+- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, prompt_len})$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
   - $q_1$: [5, 6, 7, 5]  
   - $q_2$: [10, 2, 9, 9]  
 
@@ -417,7 +417,7 @@ optimizer.step()
 ```
 
 **Explanation:**  
-- **Ratio:** $\frac{\pi_\theta}{\pi_{\theta_{\text{old}}}}$ guides the policy shift (Step 4).  
+- **Ratio:** $\frac{\pi_\theta}{\pi_{\theta_{old}}}$ guides the policy shift (Step 4).  
 - **Clipped Loss:** Combines unclipped and clipped terms, stabilized with $\epsilon = 0.2$.  
 - **KL Penalty:** Regularizes with $\beta = 0.01$.  
 - **Update:** Adam optimizes $\theta$ to maximize rewards (Step 5).  
@@ -449,14 +449,14 @@ def _get_train_sampler(self) -> Sampler:
 
 - **Dataset Source**: The `train_dataset` contains the prompts (stored under the key `"prompt"`).  
 - **Custom Sampling**: The `RepeatRandomSampler` repeats each prompt `num_generations` times (denoted $G$ in the theory) within each batch. This ensures that for every unique prompt $q_i$, there are $G$ instances in the batch, allowing the generation of multiple outputs later.  
-- **Batch Size**: The `effective_batch_size` accounts for the number of devices and gradient accumulation steps, ensuring scalability across distributed setups. The number of unique prompts per batch is $\text{effective_batch_size} / G$.  
+- **Batch Size**: The `effective_batch_size` accounts for the number of devices and gradient accumulation steps, ensuring scalability across distributed setups. The number of unique prompts per batch is $effective_batch_size} / G$.  
 - **Repetition Across Updates**: The `repeat_count=self.num_iterations` parameter allows the same batch to be reused across multiple optimization steps, a feature unique to GRPO for efficiency.  
 
 This setup guarantees that the batch is structured to support the generation of $G$ outputs per query, aligning with Step 2. The sampler’s design also ensures consistency across processes in distributed training, which is crucial for reward normalization later.
 
 ### Step 2: Sample $G$ Outputs for a Single Query
 
-**What It Does in Theory**: For each query $q$ in the batch, the current policy $\pi_{\theta_{\text{old}}}$ generates $G$ different outputs $\{o_1, o_2, \dots, o_G\}$, where each $o_i$ is a sequence of tokens.
+**What It Does in Theory**: For each query $q$ in the batch, the current policy $\pi_{\theta_{old}}$ generates $G$ different outputs $\{o_1, o_2, \dots, o_G\}$, where each $o_i$ is a sequence of tokens.
 
 **Implementation in TRL**: This step occurs in the `_generate_and_score_completions` method, called within `_prepare_inputs` during training:
 
@@ -560,7 +560,7 @@ if self.args.scale_rewards:
     advantages = advantages / (std_grouped_rewards.repeat_interleave(self.num_generations, dim=0) + 1e-4)
 ```
 
-- **Reward Computation**: For each completion, rewards are calculated using multiple `reward_funcs` (e.g., models or custom functions). The total reward $r_i$ is a weighted sum of individual rewards, matching the theoretical $r_i = \alpha \cdot \text{accuracy\_score} + \beta \cdot \text{format\_score}$.
+- **Reward Computation**: For each completion, rewards are calculated using multiple `reward_funcs` (e.g., models or custom functions). The total reward $r_i$ is a weighted sum of individual rewards, matching the theoretical $r_i = \alpha \cdot accuracy\_score} + \beta \cdot format\_score}$.
 
 - **Grouping**: Rewards are reshaped into groups of size $G$ (`self.num_generations`) to compute per-group statistics.  
 - **Advantages**: The advantage $A_i$ is computed as $r_i - \bar{r}$, and if `scale_rewards` is True, it’s normalized to $\frac{r_i - \bar{r}}{\sigma_r + 10^{-4}}$, directly implementing the formula from Step 3.  
@@ -569,7 +569,7 @@ The group-based normalization is a hallmark of GRPO, enabling relative compariso
 
 ### Step 4: Compute the Surrogate Loss
 
-**What It Does in Theory**: This step computes the probability ratio $\text{ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = \min(\text{ratio}_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $\mathcal{L}_{\text{total}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$.
+**What It Does in Theory**: This step computes the probability ratio $ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = \min(ratio}_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta \,||\, \pi_{ref}]$.
 
 **Implementation in TRL**: This is implemented in the `compute_loss` method:
 
@@ -621,23 +621,23 @@ def _get_per_token_logps(self, model, input_ids, attention_mask, logits_to_keep)
 
 - **Log Probabilities**: The `_get_per_token_logps` method computes per-token log probabilities for the current model (`per_token_logps`) and, if needed, the reference model (`ref_per_token_logps`).  
 - **Probability Ratio**:  
-  - $\text{ratio}_{i,t}$ is calculated as $\exp(\text{per_token_logps} - \text{old_per_token_logps})$, stored in `coef_1`. This is the exponential of the log probability difference, equivalent to $\frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{\text{old}}}(o_{i,t})}$.  
+  - $ratio}_{i,t}$ is calculated as $\exp(per_token_logps} - old_per_token_logps})$, stored in `coef_1`. This is the exponential of the log probability difference, equivalent to $\frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{old}}(o_{i,t})}$.  
 - **Clipped Term**:  
   - $g(\epsilon, A_i)$ is implemented as `coef_2 = torch.clamp(coef_1, 1 - self.epsilon_low, 1 + self.epsilon_high)` multiplied by `advantages`, ensuring the ratio stays within $[1 - \epsilon, 1 + \epsilon]$.  
 - **Per-Token Loss**:  
   - `per_token_loss1 = coef_1 * advantages` is the unclipped term.  
   - `per_token_loss2 = coef_2 * advantages` is the clipped term.  
   - `per_token_loss = -torch.min(per_token_loss1, per_token_loss2)` computes $L_{i,t}$, negated because the training loop minimizes the loss, while GRPO aims to maximize the surrogate objective.  
-- **KL Penalty**: If `beta != 0`, the KL term is approximated as $\exp(\text{ref_logps} - \text{logps}) - (\text{ref_logps} - \text{logps}) - 1$, added to the loss scaled by `beta`.  
+- **KL Penalty**: If `beta != 0`, the KL term is approximated as $\exp(ref_logps} - logps}) - (ref_logps} - logps}) - 1$, added to the loss scaled by `beta`.  
 - **Total Loss**: The final `loss` averages $L_{i,t}$ over all tokens, masked by `completion_mask`, matching $\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$.  
 
 **Why the Negative Sign?**: In RL, we maximize the surrogate objective, but the `Trainer` minimizes the loss. Thus, $L_{i,t}$ is negated to align with this convention.
 
-**Key Detail**: The KL penalty uses an approximation rather than the exact $D_{\text{KL}}$, which simplifies computation and is effective for small policy changes.
+**Key Detail**: The KL penalty uses an approximation rather than the exact $D_{KL}$, which simplifies computation and is effective for small policy changes.
 
 ### Step 5: Backpropagate and Update the Policy
 
-**What It Does in Theory**: Compute the gradient $\nabla_\theta \mathcal{L}_{\text{total}}(\theta)$ and update the policy parameters using an optimizer: $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}_{\text{total}}(\theta)$.
+**What It Does in Theory**: Compute the gradient $\nabla_\theta L_{total}(\theta)$ and update the policy parameters using an optimizer: $\theta \leftarrow \theta - \eta \nabla_\theta L_{total}(\theta)$.
 
 **Implementation in TRL**: This step leverages the `Trainer` class’s training loop, with no explicit override in `GRPOTrainer` for the update itself:
 
@@ -662,7 +662,7 @@ for step, inputs in enumerate(epoch_iterator):
 ```
 
 - **Gradient Accumulation**: If `gradient_accumulation_steps > 1`, the loss is scaled and gradients are accumulated before the update, enhancing efficiency.  
-- **Parameter Update**: The optimizer applies $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}_{\text{total}}$, where $\eta$ is set in `GRPOConfig`.  
+- **Parameter Update**: The optimizer applies $\theta \leftarrow \theta - \eta \nabla_\theta L_{total}$, where $\eta$ is set in `GRPOConfig`.  
 
 This step finalizes the policy improvement, adjusting token probabilities to favor higher-reward outputs while maintaining stability via clipping and KL regularization.
 
