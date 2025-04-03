@@ -25,7 +25,7 @@ Group Relative Policy Optimization (GRPO) fine-tunes a language model by iterati
 
 These steps are illustrated in Figure 1. Let us now delve into the details of each step.
 
-![Overview of the GRPO algorithm workflow.](https://github.com/abderrahmanskiredj/the-illustrated-grpo/blob/master/my_diagram.png "Figure 1: Overview of the GRPO algorithm workflow.")
+![Overview of the GRPO algorithm workflow.](https://github.com/abderrahmanskiredj/the-illustrated-grpo/blob/master/my_diagram2.png "Figure 1: Overview of the GRPO algorithm workflow.")
 
 **Step 1: Prepare a Batch of Training Queries**  
 Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the batch size. These are questions or prompts the model will respond to.
