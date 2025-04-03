@@ -45,9 +45,7 @@ where $|o_i|$ is the length of the sequence.
 $\{r_1, r_2, \dots, r_G\}.$
 
 To make this more concrete, DeepSeek uses a rule-based strategy tailored to each task, such as math or coding. The reward $r_i$ for an output $o_i$ is computed using a weighted combination:
-$$
-r_i = \alpha \cdot accuracy\_score + \beta \cdot format\_score,
-$$
+$r_i = \alpha \cdot accuracy\_score + \beta \cdot format\_score,$
 where $\alpha$ and $\beta$ are task-specific weights balancing correctness and structure.
 For the accuracy score, math tasks use regular expressions to extract the final answer and compare it to the ground truth (1 if correct, 0 otherwise). Coding tasks run the code in a sandbox and assign a score based on how many test cases pass. The format score, on the other hand, checks whether the output follows the expected structure—such as including reasoning within specific tags like `<think>`—and is typically binary (1 if well-structured, 0 if not).
 
@@ -56,9 +54,7 @@ For the accuracy score, math tasks use regular expressions to extract the final 
   - Standard deviation of rewards: $\sigma_r = \sqrt{\frac{1}{G} \sum_{i=1}^{G} (r_i - \bar{r})^2}$
 
 - **Compute Advantage**: For each output $o_i$, the advantage is:
-$$
-A_i = \frac{r_i - \bar{r}}{\sigma_r + \epsilon}
-$$
+$A_i = \frac{r_i - \bar{r}}{\sigma_r + \epsilon}$
 
 **Terms**:
   - $r_i$: Reward for output $o_i$.
@@ -73,9 +69,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 **Step 4: Compute the Surrogate Loss**
 
 - **Probability Ratio**: For each token $o_{i,t}$ in output $o_i$, compute the ratio of probabilities between the current policy $\pi_\theta$ and the old policy $\pi_{\theta_{\text{old}}}$:
-  $$
-  \text{ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}
-  $$
+  $\text{ratio}_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$
   **Terms**:
   - $\pi_\theta(o_{i,t} \mid q, o_{i,<t})$: Probability of generating token $o_{i,t}$ given query $q$ and previous tokens $o_{i,<t} = [o_{i,1}, \dots, o_{i,t-1}]$ under the current policy.
   - $\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})$: Same, but under the old policy.
@@ -83,9 +77,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   The idea is to measure how much the policy has changed for that token.
 
 - **Clipped Objective**: Define the clipped term:
-  $$
-  g(\epsilon, A_i) = \text{clip}(\text{ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i
-  $$
+  $g(\epsilon, A_i) = \text{clip}(\text{ratio}_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
   **Terms**:
   - $\text{clip}(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $\max(a, \min(b, x))$).
   - $\epsilon$: Hyperparameter (e.g., 0.2) controlling the clipping range.
@@ -94,9 +86,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   The idea is to limit large policy updates for stability.
 
 - **Loss per Token**: For each token $o_{i,t}$:
-  $$
-  L_{i,t} = \min \left( \text{ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)
-  $$
+  $L_{i,t} = \min \left( \text{ratio}_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$
   **Terms**:
   - $\text{ratio}_{i,t} \cdot A_i$: Unclipped objective (encourages policy to favor high-advantage outputs).
   - $g(\epsilon, A_i)$: Clipped objective (caps the update size).
@@ -106,23 +96,17 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i|q) = 0.9$, $\pi_{\text{old}}(o_i|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
 
 - **Total Surrogate Loss**: Average over all tokens and outputs:
-  $$
-  \mathcal{L}_{\text{GRPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}
-  $$
+  $\mathcal{L}_{\text{GRPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
   **Terms**:
   - $\frac{1}{G}$: Normalizes across the $G$ outputs.
   - $\frac{1}{|o_i|}$: Normalizes across the length of each output $o_i$.
   - $L_{i,t}$: Loss contribution from each token.
 
 - **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{\text{ref}}$ (e.g., initial policy):
-  $$
-  \mathcal{L}_{\text{total}}(\theta) = \mathcal{L}_{\text{GRPO}}(\theta) - \beta D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]
-  $$
+  $\mathcal{L}_{\text{total}}(\theta) = \mathcal{L}_{\text{GRPO}}(\theta) - \beta D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$
   **Terms**:
   - $D_{\text{KL}}[\pi_\theta \,||\, \pi_{\text{ref}}]$: KL divergence, approximated per token as:
-    $$
-    D_{\text{KL}} \approx \sum_{t} \pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}
-    $$
+    $D_{\text{KL}} \approx \sum_{t} \pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t}) \log \frac{\pi_{\text{ref}}(o_{i,t} \mid q, o_{i,<t})}{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}$
   - $\beta$: Hyperparameter (e.g., 0.01) controlling penalty strength.
   
   The idea is to ensure stability by keeping $\pi_\theta$ close to $\pi_{\text{ref}}$. A KL divergence penalty keeps the model’s outputs near the original distribution, preventing extreme shifts while still allowing controlled exploration and refinement.
@@ -132,13 +116,9 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 **Step 5: Backpropagate and Update the Policy**
 
 - **Gradient Computation**: Compute the gradient of $\mathcal{L}_{\text{total}}(\theta)$ with respect to $\theta$:
-  $$
-  \nabla_\theta \mathcal{L}_{\text{total}}(\theta)
-  $$
+  $\nabla_\theta \mathcal{L}_{\text{total}}(\theta)$
 - **Update**: Use an optimizer (e.g., Adam) to adjust $\theta$:
-  $$
-  \theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}_{\text{total}}(\theta)
-  $$
+  $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}_{\text{total}}(\theta)$
   **Terms**:
   - $\eta$: Learning rate (e.g., $10^{-5}$).
   
@@ -390,9 +370,7 @@ advantages = advantages.unsqueeze(1)
 **Explanation:**  
 - **Reward Assignment:** Rewards are assigned per query: $q_1$ (answer: 5) gets [1, 0, 0, 1]; $q_2$ (answer: 9) gets [0, 0, 1, 1]. In practice, we’d decode the generated tokens and compare them to the correct answers (Step 3).  
 - **Grouping:** `rewards_grouped` becomes $(2, 4)$:  
-  $$
-  \begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}
-  $$  
+  $\begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 1 \end{bmatrix}$  
 - **Statistics:** Mean: [0.5, 0.5], Std: [0.5774, 0.5774]  
 - **Broadcasting:** Mean and std are repeated: [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]  
 - **Advantages:** $A_i = \frac{r_i - \bar{r}}{\sigma_r + 10^{-8}}$, e.g., $A_1 = \frac{1 - 0.5}{0.5774} \approx 0.8659$, yielding [0.8659, -0.8660, -0.8660, 0.8659, -0.8660, -0.8660, 0.8659, 0.8659]  
