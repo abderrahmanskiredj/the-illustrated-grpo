@@ -80,7 +80,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 - **Clipped Objective**: Define the clipped term:
   $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$
   **Terms**:
-  - $clip(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $max(a, min(b, x))$).
+  - $clip(x, a, b)$: Clamps $x$ between $a$ and $b$ (i.e., $max(a, min(b, x))$ ).
   - $\epsilon$: Hyperparameter (e.g., 0.2) controlling the clipping range.
   - $A_i$: Advantage for output $o_i$.
   
