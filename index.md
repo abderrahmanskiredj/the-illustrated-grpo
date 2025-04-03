@@ -97,7 +97,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i|q) = 0.9$, $\pi_{\text{old}}(o_i|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
 
 - **Total Surrogate Loss**: Average over all tokens and outputs:
-  $\mathcal{L}_{\text{GRPO}}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
+  $\mathcal{L}_{GRPO}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
   **Terms**:
   - $\frac{1}{G}$: Normalizes across the $G$ outputs.
   - $\frac{1}{|o_i|}$: Normalizes across the length of each output $o_i$.
