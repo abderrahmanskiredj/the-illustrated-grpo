@@ -47,7 +47,7 @@ $$
 o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,|o_i|}],
 $$
 
-where $o_i$ is the length of the sequence.
+where $\|o_i\|$ is the length of the sequence.
 
 **Why G Outputs?** Sampling multiple outputs allows GRPO to compare them relative to each other, forming a group-based baseline for rewards.
 
