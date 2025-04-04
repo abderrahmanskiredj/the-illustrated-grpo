@@ -347,8 +347,8 @@ outputs = model.generate(
 
 **Comments:**  
 - **Model Loading:** We load `Qwen/Qwen2-Math-1.5B` and its tokenizer, representing the current policy $\pi_{\theta_{old}}$ (Step 1). The model is set to evaluation mode and moved to the GPU if available.  
-- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, prompt\_len)$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
-- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, prompt\_len)$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
+- **Prompt Preparation:** We define a batch of $B = 2$ prompts, tokenized into `input_ids` with shape $(2, prompt\\_len)$, matching Step 1’s batch of queries $\{q_1, q_2\}$.  
+- **Response Generation:** The `model.generate` call produces $G = 4$ responses per prompt. With `input_ids` of shape $(2, prompt\\_len)$ and `num_return_sequences=4`, it generates $2 \times 4 = 8$ total responses (Step 2). The `max_new_tokens=1` ensures single-token outputs (e.g., "5", "9"). Sampling parameters (`top_k=10`, `temperature=0.7`) ensure diversity. Example output:  
   - $q_1$: [5, 6, 7, 5]  
   - $q_2$: [10, 2, 9, 9]  
 
