@@ -597,7 +597,11 @@ The group-based normalization is a hallmark of GRPO, enabling relative compariso
 
 ### Step 4: Compute the Surrogate Loss
 
-**What It Does in Theory**: This step computes the probability ratio $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = min(ratio_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
+**What It Does in Theory**: This step computes the probability ratio $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = min(ratio_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty:
+
+$$
+L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]
+$$
 
 **Implementation in TRL**: This is implemented in the `compute_loss` method:
 
