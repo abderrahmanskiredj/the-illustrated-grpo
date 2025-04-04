@@ -752,7 +752,7 @@ GRPO empowers large language models with specialized skills, controlled outputs,
 
 # References
 
-[^1]: HuggingFace and UnslothAI. *Colab: HuggingFace Course - Gemma3 (1B) - GRPO*. Available at: [https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/HuggingFace%20Course-Gemma3_(1B)-GRPO.ipynb](https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/HuggingFace%20Course-Gemma3_(1B)-GRPO.ipynb). Accessed: April 1, 2025.  
+[^1]: HuggingFace and UnslothAI. *Colab: HuggingFace Course - Gemma3 (1B) - GRPO*. Available at: [https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/HuggingFace%20Course-Gemma3_(1B)-GRPO.ipynb]. Accessed: April 1, 2025.  
 [^2]: HuggingFace. *GRPO Trainer in TRL Library*. Available at: [https://github.com/huggingface/trl/blob/main/trl/trainer/grpo_trainer.py](https://github.com/huggingface/trl/blob/main/trl/trainer/grpo_trainer.py). Accessed: April 1, 2025.  
 [^3]: DeepSeek-AI et al. (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*. arXiv:2501.12948.  
 [^4]: DeepSeek-AI et al. (2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437.  
