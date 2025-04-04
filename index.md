@@ -1,9 +1,7 @@
-
----
-The Illustrated GRPO: A Detailed and Pedagogical Explanation of GRPO Algorithm
-<br><small>by Abderrahman Skiredj</small><br><small><a href='mailto:abderrahman.skiredj@um6p.ma'>abderrahman.skiredj@um6p.ma</a></small>
-<br><small>April 2025<br><small>
----
+<div style="text-align: center;"><h1 style="font-size: 48px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
+<div style="text-align: center;">by Abderrahman Skiredj</div>
+<div style="text-align: center;"><small><a href='mailto:abderrahman.skiredj@um6p.ma'>abderrahman.skiredj@um6p.ma</a></small></div>
+<div style="text-align: center;"><small>April 2025</small></div>
 
 <script>
   MathJax = {
