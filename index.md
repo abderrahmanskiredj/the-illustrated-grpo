@@ -148,7 +148,11 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 2. **Probability Ratio**: $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
 3. **Clipped Term**: $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
 4. **Token Loss**: $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
-5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
+5. **Total Loss**:
+
+$$
+L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_{\theta} || \pi_{ref}]
+$$
 
 **Limitations & Challenges of GRPO**  
 The following passage is taken directly from the HuggingFace Reasoning Course[^5]  : 
