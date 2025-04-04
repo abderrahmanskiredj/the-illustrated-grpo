@@ -1,3 +1,5 @@
+title: ""  # Set an empty title to remove it
+header_pages: false  # Optional: prevents header generation if present
 markdown: kramdown  # Markdown processor that supports MathJax
 kramdown:
   math_engine: mathjax  # Tells kramdown to expect MathJax for LaTeX
