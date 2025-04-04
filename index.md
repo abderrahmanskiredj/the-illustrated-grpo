@@ -165,7 +165,8 @@ The following passage is taken directly from the HuggingFace Reasoning Course[^5
 # Practical Tutorial Using TRL Library
 <a name="sec:tutorial"></a>
 
-Here’s what you need to know to get started as soon as possible with your own GRPO use case!
+**Here’s what you need to know to get started as soon as possible with your own GRPO use case!**
+
 Alongside the theoretical concepts outlined earlier, we present a pedagogically focused version of the excellent practical tutorial available online [^1], which utilizes the TRL library’s implementation of the GRPO Algorithm [^2]. This section emphasizes the core components to help you hit the ground running.
 
 ### Data Preparation
