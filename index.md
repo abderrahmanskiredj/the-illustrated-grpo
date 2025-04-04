@@ -44,7 +44,7 @@ Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the ba
 For simplicity, consider a single query $q$ from the batch. Using the current policy model with parameters $\theta_{old}$ (denoted $\pi_{\theta_{old}}$), generate $G$ different outputs $\{o_1, o_2, \dots, o_G\}$. Each output $o_i$ is a sequence of tokens:
 
 $$
-o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,|o_i|}],
+o_i = [o_{i,1},\ o_{i,2},\ \dots,\ o_{i,\|o_i\|}],
 $$
 
 where $\|o_i\|$ is the length of the sequence.
@@ -76,7 +76,7 @@ $A_i = \frac{r_i - \bar{r}}{\sigma_r + \epsilon}$
   - $\epsilon$: Small constant (e.g., $10^{-8}$) to avoid division by zero if $\sigma_r = 0$.
 
 The idea is that by normalizing the reward relative to the group, indicating how much better or worse $o_i$ is compared to the average, the model learns to favor responses with $A_i > 0$ and suppress those with $A_i < 0$. For instance, if $A_i = 0.94$, the model increases the likelihood of generating that (correct) response.  
-Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the same for all tokens $o_{i,t}$ in output $o_i$. So, $A_{i,t} = A_i$ for all $t = 1, 2, \dots, |o_i|$. This is because the reward $r_i$ is given for the entire output $o_i$, not per token or step.  
+Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the same for all tokens $o_{i,t}$ in output $o_i$. So, $A_{i,t} = A_i$ for all $t = 1, 2, \dots, \|o_i\|$. This is because the reward $r_i$ is given for the entire output $o_i$, not per token or step.  
 **Exception**: In process supervision (not standard GRPO), rewards are given per reasoning step, and advantages could vary per token or segment. But for this explanation, we assume outcome supervision, so $A_{i,t} = A_i$.
 
 **Step 4: Compute the Surrogate Loss**
@@ -109,14 +109,14 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
   
   The idea is to take the minimum to conservatively update the policy: The clipping restricts the policy update ratio to $[1 - \epsilon, 1 + \epsilon]$ to avoid large shifts from the old policy. This in particular limits overconfident updates.
   
-  Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i|q) = 0.9$, $\pi_{old}(o_i|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
+  Example with $\epsilon = 0.2$: if $\pi_{\theta}(o_i\|q) = 0.9$, $\pi_{old}(o_i\|q) = 0.5$, then ratio $= 1.8 \rightarrow$ clip to 1.2. If new policy gives 0.2, then $0.2 / 0.5 = 0.4 \rightarrow$ clip to 0.8.
 
 - **Total Surrogate Loss**: Average over all tokens and outputs:
-  $L_{GRPO}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$
+  $L_{GRPO}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t}$
   
   **Terms**:
   - $\frac{1}{G}$: Normalizes across the $G$ outputs.
-  - $\frac{1}{|o_i|}$: Normalizes across the length of each output $o_i$.
+  - $\frac{1}{\|o_i\|}$: Normalizes across the length of each output $o_i$.
   - $L_{i,t}$: Loss contribution from each token.
 
 - **KL Divergence Penalty**: Add a penalty to prevent large deviations from a reference policy $\pi_{ref}$ (e.g., initial policy):
@@ -148,7 +148,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 2. **Probability Ratio**: $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$.
 3. **Clipped Term**: $g(\epsilon, A_i) = clip(ratio_{i,t}, 1 - \epsilon, 1 + \epsilon) \cdot A_i$.
 4. **Token Loss**: $L_{i,t} = \min \left( ratio_{i,t} \cdot A_i, \; g(\epsilon, A_i) \right)$.
-5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
+5. **Total Loss**: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
 
 **Limitations & Challenges of GRPO**  
 The following passage is taken directly from the HuggingFace Reasoning Course[^5]  : 
@@ -593,7 +593,7 @@ The group-based normalization is a hallmark of GRPO, enabling relative compariso
 
 ### Step 4: Compute the Surrogate Loss
 
-**What It Does in Theory**: This step computes the probability ratio $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = min(ratio_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
+**What It Does in Theory**: This step computes the probability ratio $ratio_{i,t} = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{old}}(o_{i,t} \mid q, o_{i,<t})}$, the clipped term $g(\epsilon, A_i)$, and the per-token loss $L_{i,t} = min(ratio_{i,t} \cdot A_i, g(\epsilon, A_i))$. The total loss includes a KL penalty: $L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_\theta || \pi_{ref}]$.
 
 **Implementation in TRL**: This is implemented in the `compute_loss` method:
 
@@ -656,7 +656,7 @@ def _get_per_token_logps(self, model, input_ids, attention_mask, logits_to_keep)
   - `per_token_loss2 = coef_2 * advantages` is the clipped term.  
   - `per_token_loss = -torch.min(per_token_loss1, per_token_loss2)` computes $L_{i,t}$, negated because the training loop minimizes the loss, while GRPO aims to maximize the surrogate objective.  
 - **KL Penalty**: If `beta != 0`, the KL term is approximated as $\exp(ref\\_logps - logps) - (ref\\_logps - logps) - 1$, added to the loss scaled by `beta`.  
-- **Total Loss**: The final `loss` averages $L_{i,t}$ over all tokens, masked by `completion_mask`, matching $\frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t}$.  
+- **Total Loss**: The final `loss` averages $L_{i,t}$ over all tokens, masked by `completion_mask`, matching $\frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t}$.  
 
 **Why the Negative Sign?**: In RL, we maximize the surrogate objective, but the `Trainer` minimizes the loss. Thus, $L_{i,t}$ is negated to align with this convention.
 
