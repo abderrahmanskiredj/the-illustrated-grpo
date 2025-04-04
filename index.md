@@ -5,6 +5,16 @@ The Illustrated GRPO: A Detailed and Pedagogical Explanation of GRPO Algorithm
 <br><small>April 2025<br><small>
 ---
 
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]  // Optional: for display math
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
 # Introduction
 
 Adapting large language models (LLMs) to specific tasks often involves prompting, Retrieval-Augmented Generation (RAG), or agentic systems. Prompting suits quick, general tasks but falters in complex reasoning or specialization. RAG excels with external knowledge but struggles to teach new skills or control output style. Agentic systems fit dynamic goals yet can overcomplicate simpler needs. Group Relative Policy Optimization (GRPO), a DeepSeek reinforcement learning method [^3], is ideal when deep domain expertise, precise style and tone control, specific output formatting, or debiasing are required—particularly for reasoning-intensive tasks without clear answers, as shown in DeepSeekMath [^4]. This paper offers a clear, comprehensive guide to GRPO, blending theory, math, and practical steps. Where existing resources scatter or omit details, we provide a unified, pedagogical resource to unlock GRPO’s potential for fine-tuning LLMs effectively.
@@ -702,13 +712,3 @@ GRPO empowers large language models with specialized skills, controlled outputs,
 [^3]: DeepSeek-AI et al. (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*. arXiv:2501.12948.  
 [^4]: DeepSeek-AI et al. (2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437.  
 [^5]: Hugging Face, *Understanding the DeepSeek R1 Paper*, Open R1 for Students. Available at: [https://huggingface.co/learn/nlp-course/chapter12/3?fw=pt](https://huggingface.co/learn/nlp-course/chapter12/3?fw=pt) (Accessed: April 2, 2025).
-
-
-<script>
-  MathJax = {
-    tex: {
-      inlineMath: [['$', '$'], ['\\(', '\\)']]
-    }
-  };
-</script>
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
