@@ -31,7 +31,7 @@ Group Relative Policy Optimization (GRPO) fine-tunes a language model by iterati
 4. Calculate a surrogate loss using clipped probability ratios between the current policy $\pi_\theta$ and old policy, with a KL penalty for stability.
 5. Update the policy parameters $\theta$ via backpropagation to maximize expected rewards.
 
-These steps are illustrated in Figure 1. Let us now delve into the details of each step.
+These steps are illustrated in Figure 1, which applies them to fine-tune an LLM on mathematical reasoning. Let us now delve into the details of each step.
 
 ![Overview of the GRPO algorithm workflow.](my_diagram2.png "Figure 1: Overview of the GRPO algorithm workflow.")
 
