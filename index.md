@@ -17,10 +17,9 @@
       
       <!-- Links -->
       <p style="margin: 5px 0;">
-        <span style="color: #007bff;">abderrahman.skiredj@</span>
-        <span style="color: #007bff;">um6p.ma</span>
+        <span style="color: #007bff;">abderrahman.skiredj@um6p.ma</span>
         /
-        <span style="color: #007bff;">ocpsolutions.ma</span> |
+        <span style="color: #007bff;">@ocpsolutions.ma</span> |
         <a href="https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en">Google Scholar</a> | 
         <a href="https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/">LinkedIn</a> | 
         <a href="https://huggingface.co/AbderrahmanSkiredj1">HuggingFace</a>
