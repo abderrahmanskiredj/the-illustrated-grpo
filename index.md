@@ -17,7 +17,7 @@
       
       <!-- Links -->
       <p style="margin: 5px 0;">
-        abderrahman.skiredj@um6p.ma | 
+        <span style="color: #007bff;">abderrahman.skiredj@um6p.ma</span> | 
         <a href="https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en">Google Scholar</a> | 
         <a href="https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/">LinkedIn</a> | 
         <a href="https://huggingface.co/AbderrahmanSkiredj1">HuggingFace</a>
@@ -28,7 +28,7 @@
 
 
 
-<div style="text-align: center;"><h1 style="font-size: 22px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
+<div style="text-align: center;"><h1 style="font-size: 24px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
 <div style="text-align: center;"><small>April 2025</small></div>
 
 <script>
