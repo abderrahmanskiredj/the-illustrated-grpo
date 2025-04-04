@@ -1,3 +1,33 @@
+<!-- Profile Box -->
+<div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+  <div style="display: flex; align-items: center;">
+    <!-- Photo (Adjust width/height and remove border-radius if you don't want a circle) -->
+    <img src="miscellaneous/photo.png" alt="Profile photo" 
+         style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-right: 20px;">
+         
+    <!-- Text Section -->
+    <div>
+      <!-- Name/Title -->
+      <h2 style="margin: 0; font-size: 1.5em;">Abderrahman Skiredj</h2>
+      
+      <!-- Short interest statement -->
+      <p style="margin: 5px 0;">
+        I am a researcher interested in LLM fine-tuning, Reinforcement Learning, and advanced AI applications.
+      </p>
+      
+      <!-- Links -->
+      <p style="margin: 5px 0;">
+        <a href="mailto:abderrahman.skiredj@um6p.ma">Email</a> | 
+        <a href="https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en">Google Scholar</a> | 
+        <a href="https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/">LinkedIn</a> | 
+        <a href="https://huggingface.co/AbderrahmanSkiredj1">HuggingFace</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
 <div style="text-align: center;"><h1 style="font-size: 22px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
 <div style="text-align: center;">Abderrahman Skiredj</div>
 <div style="text-align: center;"><small><a href='mailto:abderrahman.skiredj@um6p.ma'>abderrahman.skiredj@um6p.ma</a> | <a href='https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en'>Scholar</a> | <a href='https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/'>LinkedIn</a> | <a href='https://huggingface.co/AbderrahmanSkiredj1'>HuggingFace</a></small></div>
