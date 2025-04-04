@@ -1,6 +1,6 @@
 <div style="text-align: center;"><h1 style="font-size: 22px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
 <div style="text-align: center;">by Abderrahman Skiredj</div>
-<div style="text-align: center;"><small><a href='mailto:abderrahman.skiredj@um6p.ma'>abderrahman.skiredj@um6p.ma</a> | <a href='https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en'>Scholar</a> | <a href='https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/'>LinkedIn</a></small></div>
+<div style="text-align: center;"><small><a href='mailto:abderrahman.skiredj@um6p.ma'>abderrahman.skiredj@um6p.ma</a> | <a href='https://scholar.google.com/citations?user=oUFfQTIAAAAJ&hl=en'>Scholar</a> | <a href='https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/'>LinkedIn</a> | <a href='https://huggingface.co/AbderrahmanSkiredj1'>HuggingFace</a></small></div>
 <div style="text-align: center;"><small>April 2025</small></div>
 
 <script>
