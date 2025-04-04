@@ -1,4 +1,3 @@
-theme: minima  # Optional: adds basic styling
 markdown: kramdown  # Markdown processor that supports MathJax
 kramdown:
   math_engine: mathjax  # Tells kramdown to expect MathJax for LaTeX
