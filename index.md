@@ -180,7 +180,7 @@ To give a clearer picture, here are two sample entries from the dataset:
 
 **Sample 2:**  
 - **Question**: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?  
-- **Answer**: Weng earns 12/60 = $0.2 per minute. Working 50 minutes, she earned 0.2*50 = $10. `# 10`
+- **Answer**: Weng earns 12/60 = $0.2 per minute. Working 50 minutes, she earned 0.2*50 = 10. `# 10`
 
 The first step is to extract the final answer (e.g., "72" or "10") for evaluation. We define a function to do this:
 
