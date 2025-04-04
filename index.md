@@ -19,7 +19,7 @@ Adapting large language models (LLMs) to specific tasks often involves prompting
 
 The paper is organized into **four main sections** to provide a comprehensive understanding of GRPO from theory to practice. The first section offers a **theoretical deep dive**, detailing the algorithm’s mechanics with rigor and intuitive explanations. The second section serves as a **practical tutorial**, guiding readers through a quick application of GRPO using the TRL library with simplified steps and examples. The third section presents **a simplified, didactic implementation of GRPO**, designed for clarity and educational purposes, using a small model and basic prompts. Finally, the fourth section explores an optimized, **industrial-grade implementation from the TRL library**, mapping theoretical steps to production-ready code.
 
-<div style="font-size: 1.1em; margin-top: 15px; padding: 10px; background-color: #f5f5f5; border-radius: 5px;">
+<div style="margin-top: 10px; padding: 5px; background-color: #f5f5f5; border-left: 3px solid #ccc;">
 For readers who prefer a consolidated offline version, a PDF of this paper is available [here](./The Illustrated GRPO.pdf).
 </div>
 
