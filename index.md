@@ -12,7 +12,7 @@
       
       <!-- Short interest statement -->
       <p style="margin: 5px 0;">
-        I am a researcher interested in LLM fine-tuning, Reinforcement Learning, and advanced AI applications.
+        I am an AI professional and researcher passionate about meaningful applications and insights, with interests spanning GenAI, LLMs, NLP applied to Arabic, and Operations Research.
       </p>
       
       <!-- Links -->
