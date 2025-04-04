@@ -154,7 +154,7 @@ Note that in standard GRPO (outcome supervision), the advantage $A_i$ is the sam
 5. **Total Loss**:
 
 $$
-L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{\|o_i\|} \sum_{t=1}^{\|o_i\|} L_{i,t} - \beta D_{KL}[\pi_{\theta} || \pi_{ref}]
+L_{total}(\theta) = \frac{1}{G} \sum_{i=1}^{G} \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} L_{i,t} - \beta D_{KL}[\pi_{\theta} || \pi_{ref}]
 $$
 
 **Limitations & Challenges of GRPO**  
