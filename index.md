@@ -712,6 +712,3 @@ GRPO empowers large language models with specialized skills, controlled outputs,
 [^3]: DeepSeek-AI et al. (2025). *DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning*. arXiv:2501.12948.  
 [^4]: DeepSeek-AI et al. (2025). *DeepSeek-V3 Technical Report*. arXiv:2412.19437.  
 [^5]: Hugging Face, *Understanding the DeepSeek R1 Paper*, Open R1 for Students. Available at: [https://huggingface.co/learn/nlp-course/chapter12/3?fw=pt](https://huggingface.co/learn/nlp-course/chapter12/3?fw=pt) (Accessed: April 2, 2025).
-
-</body>
-</html>
