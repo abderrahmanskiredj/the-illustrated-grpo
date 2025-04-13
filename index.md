@@ -41,11 +41,7 @@ permalink: /
 
 # The Illustrated GRPO: Group Relative Policy Optimization Explained
 
-*Published April 2025*
-<!--
-<div style="text-align: center;"><h1 style="font-size: 24px; font-weight: bold;">The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm</h1></div>
 <div style="text-align: center;"><small>April 2025</small></div>
--->
 
 <script>
   MathJax = {
