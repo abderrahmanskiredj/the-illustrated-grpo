@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  <meta name="description" content="{{ page.description }}">
+  <meta name="keywords" content="{{ page.keywords }}">
+  <meta name="author" content="{{ page.author }}">
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="{{ page.title }}">
+  <meta property="og:description" content="{{ page.description }}">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://abderrahmanskiredj.github.io{{ page.permalink }}">
+  <meta property="og:image" content="https://abderrahmanskiredj.github.io/the-illustrated-grpo/miscellaneous/photo.png">
+  <meta property="og:site_name" content="The Illustrated GRPO">
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page.title }}">
+  <meta name="twitter:description" content="{{ page.description }}">
+  <meta name="twitter:image" content="https://abderrahmanskiredj.github.io/the-illustrated-grpo/miscellaneous/photo.png">
+  <meta name="twitter:creator" content="@ocpsolutions">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "{{ page.title }}",
+    "description": "{{ page.description }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ page.author }}",
+      "url": "https://www.linkedin.com/in/abderrahman-skiredj-99a80510b/"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Abderrahman Skiredj",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://abderrahmanskiredj.github.io/the-illustrated-grpo/miscellaneous/photo.png"
+      }
+    },
+    "datePublished": "2025-04-01",
+    "image": "https://abderrahmanskiredj.github.io/the-illustrated-grpo/my_diagram2.png",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://abderrahmanskiredj.github.io/the-illustrated-grpo/"
+    }
+  }
+  </script>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/the-illustrated-grpo/miscellaneous/favicon.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="/the-illustrated-grpo/styles.css">
+</head>
+<body>
+  {{ content }}
+</body>
+</html>
