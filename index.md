@@ -12,7 +12,7 @@ permalink: /
 <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
   <div style="display: flex; align-items: center;">
     <!-- Photo (Adjust width/height and remove border-radius if you don't want a circle) -->
-    <img src="miscellaneous/photo.png" alt="Profile photo" 
+    <img src="miscellaneous/photo.png" alt="Abderrahman Skiredj, AI professional & researcher" 
          style="width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin-right: 20px;">
          
     <!-- Text Section -->
@@ -78,7 +78,7 @@ Group Relative Policy Optimization (GRPO) fine-tunes a language model by iterati
 
 These steps are illustrated in Figure 1, which applies them to fine-tune an LLM on mathematical reasoning. Let us now delve into the details of each step.
 
-![Overview of the GRPO algorithm workflow.](my_diagram2.png "Figure 1: Overview of the GRPO algorithm workflow.")
+![Overview of the GRPO algorithm workflow.](my_diagram2.png "Diagram illustrating the Group Relative Policy Optimization (GRPO) algorithm workflow for fine-tuning LLMs.")
 
 **Step 1: Prepare a Batch of Training Queries**  
 Take a batch of training queries $\{q_1, q_2, \dots, q_B\}$, where $B$ is the batch size. These are questions or prompts the model will respond to.
