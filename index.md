@@ -1,3 +1,13 @@
+---
+layout: default
+title: "The Illustrated GRPO: A Detailed and Pedagogical Explanation of Group Relative Policy Optimization (GRPO) Algorithm"
+description: "A thorough, pedagogical, and comprehensive guide to the GRPO algorithm for fine-tuning LLMs to enhance their reasoning abilities. Ideal for those seeking an in-depth understanding of the GRPO Algorithm, its logic, the maths behind it, its implementation, and a practical guide to perform GRPO fine-tuning."
+author: "Abderrahman Skiredj"
+date: "April 2025"
+keywords: ["GRPO", "Group Relative Policy Optimization", "reinforcement learning", "large language models", "LLM fine-tuning", "DeepSeek", "TRL library"]
+permalink: /
+---
+
 <!-- Profile Box -->
 <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
   <div style="display: flex; align-items: center;">
